@@ -4,8 +4,8 @@ Hosted scripts for the calculators on arcsite.com (Webflow). Static files only, 
 
 | Calculator | Used on | Pinned version (live pages) | Latest (testing only) |
 | --- | --- | --- | --- |
-| ROI by pricing plan | Pricing page, below the plans | `/roi-pricing/0.2.0.js` | `/roi-pricing/latest.js` |
-| ROI by vertical | Industry pages | `/roi-vertical/0.2.0.js` | `/roi-vertical/latest.js` |
+| ROI by pricing plan | Pricing page, below the plans | `/roi-pricing/0.3.0.js` | `/roi-pricing/latest.js` |
+| ROI by vertical | Industry pages | `/roi-vertical/0.3.0.js` | `/roi-vertical/latest.js` |
 
 Version files are cached for a year and never change. `latest.js` is cached for 5 minutes. Test pages: `/pricing` and `/vertical`.
 
@@ -24,7 +24,7 @@ Each script adds its own styles, which read the OW design system variables from 
 **Pricing page.** Add a Div Block where the calculator goes. In its Settings, add the custom attribute `data-arcsite-roi` = `pricing`. Then add to the page's custom code, before `</body>`:
 
 ```html
-<script src="https://YOUR-DOMAIN/roi-pricing/0.2.0.js" defer></script>
+<script src="https://YOUR-DOMAIN/roi-pricing/0.3.0.js" defer></script>
 ```
 
 It follows the page's billing toggle automatically. The toggle's code tells it about changes with:
@@ -38,7 +38,7 @@ To turn that off, add `data-sync-billing` = `false` to the Div Block.
 **Industry page.** Add a Div Block with `data-arcsite-roi` = `vertical` and `data-trade` = the industry. Then:
 
 ```html
-<script src="https://YOUR-DOMAIN/roi-vertical/0.2.0.js" defer></script>
+<script src="https://YOUR-DOMAIN/roi-vertical/0.3.0.js" defer></script>
 ```
 
 Optional attributes on either Div Block:
@@ -57,3 +57,23 @@ Optional attributes on either Div Block:
 4. Check the test page, then change the script URL in Webflow to the new version and publish.
 
 To roll back, point Webflow at the previous version file.
+
+## HubSpot events (api/roi-event.js)
+
+A Vercel function that forwards two calculator events to HubSpot custom events:
+
+| Event sent by the page | HubSpot event |
+| --- | --- |
+| `completed` (result viewed 3+ seconds) | `pe1608094_roi_calculator_completed` |
+| `demo_requested` (demo form submitted from the calculator pop-up) | `pe1608094_roi_calculator_demo_requested` |
+
+Endpoint: `https://YOUR-DOMAIN/api/roi-event`. Accepts requests from arcsite.com and webflow.io only.
+
+Environment variables (Vercel → Settings → Environment Variables, never in GitHub):
+
+| Name | Value |
+| --- | --- |
+| `HUBSPOT_EVENT_TOKEN` | HubSpot private app token with permission to send custom events |
+| `PAGE_URL_PROPERTY` | Optional. HubSpot event property for the page URL, once confirmed |
+
+Without `HUBSPOT_EVENT_TOKEN`, the function answers with `503` and shows what it would have sent, which is useful for testing.
