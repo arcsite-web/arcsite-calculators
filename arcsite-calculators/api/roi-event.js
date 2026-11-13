@@ -1,5 +1,5 @@
 // Forwards ROI calculator events from arcsite.com to HubSpot custom events.
-// The HubSpot private app token lives ONLY in Vercel env vars (HUBSPOT_TOKEN). Never commit it.
+// The HubSpot private app token lives ONLY in Vercel env vars (HUBSPOT_EVENT_TOKEN). Never commit it.
 
 const EVENTS = {
   completed: "pe1608094_roi_calculator_completed",
