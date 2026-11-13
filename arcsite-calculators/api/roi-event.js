@@ -64,8 +64,8 @@ module.exports = async (req, res) => {
   }
   if (PAGE_URL_PROPERTY && typeof body.page_url === "string") properties[PAGE_URL_PROPERTY] = body.page_url.slice(0, 500);
 
-  const token = process.env.HUBSPOT_TOKEN;
-  if (!token) return res.status(503).json({ error: "HUBSPOT_TOKEN not set", wouldSend: { eventName, email: !!email, utk: !!utk, properties } });
+  const token = process.env.HUBSPOT_EVENT_TOKEN;
+  if (!token) return res.status(503).json({ error: "HUBSPOT_EVENT_TOKEN not set", wouldSend: { eventName, email: !!email, utk: !!utk, properties } });
 
   const payload = { eventName, properties, occurredAt: new Date().toISOString() };
   if (email) payload.email = email; else payload.utk = utk;
