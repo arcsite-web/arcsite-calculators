@@ -11,8 +11,11 @@ const ALLOWED = [
   "calculator_variant", "trade", "plan", "billing", "seats", "scenario", "sends_quotes",
   "jobs_per_month", "avg_job_size", "hours_saved_per_month", "plan_cost_per_year",
   "net_return_per_year", "model_version",
+  "hours_per_job", "labor_cost_per_hour", "gross_margin", "close_rate", "quotes_within_24_hours",
+  "material_mistakes_per_month", "value_per_year", "summary",
 ];
-const NUMBERS = new Set(["seats", "jobs_per_month", "avg_job_size", "hours_saved_per_month", "plan_cost_per_year", "net_return_per_year"]);
+const NUMBERS = new Set(["seats", "jobs_per_month", "avg_job_size", "hours_saved_per_month", "plan_cost_per_year", "net_return_per_year",
+  "hours_per_job", "labor_cost_per_hour", "gross_margin", "close_rate", "quotes_within_24_hours", "material_mistakes_per_month", "value_per_year"]);
 
 // Optional: HubSpot property that stores the page URL (set PAGE_URL_PROPERTY in Vercel once confirmed, e.g. hs_url)
 const PAGE_URL_PROPERTY = process.env.PAGE_URL_PROPERTY || "";
@@ -59,7 +62,7 @@ module.exports = async (req, res) => {
   for (const k of ALLOWED) {
     if (body.properties && body.properties[k] !== undefined && body.properties[k] !== null) {
       const v = body.properties[k];
-      properties[k] = NUMBERS.has(k) ? Number(v) || 0 : String(v).slice(0, 255);
+      properties[k] = NUMBERS.has(k) ? Number(v) || 0 : String(v).slice(0, k === "summary" ? 1000 : 255);
     }
   }
   if (PAGE_URL_PROPERTY && typeof body.page_url === "string") properties[PAGE_URL_PROPERTY] = body.page_url.slice(0, 500);
